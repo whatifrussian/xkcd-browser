@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">XKCD Viewer</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="first_button">« first</string>
+    <string name="prev_button">‹ prev</string>
+    <string name="list_button">#1</string>
+    <string name="next_button">next ›</string>
+    <string name="last_button">last »</string>
 </resources>
