@@ -14,16 +14,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ComicsFragment())
+                    .add(R.id.container, ComicsFragment.newInstance(1498))
                     .commit();
         }
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                XkcdAPI.getComicsByURL("http://xkcd.ru/1/");
-            }
-        }).start();
     }
 
 
