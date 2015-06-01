@@ -30,7 +30,7 @@ public class XkcdAPI {
         public ComicsInfo() { }
     }
 
-    public static ComicsInfo getComicsByUrl(String url) {
+    public static ComicsInfo getComicsByURL(String url) {
         String jsonUrl = url + "?json=1";
         String json;
 

@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                XkcdAPI.getComicsByUrl("http://xkcd.ru/1/");
+                XkcdAPI.getComicsByURL("http://xkcd.ru/1/");
             }
         }).start();
     }
