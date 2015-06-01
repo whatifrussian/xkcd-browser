@@ -16,10 +16,13 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ComicsFragment extends Fragment {
     private static final String ARG_COMICS_NUMBER = "number";
 
-    private int comicsNumber;
+    private int comicsId;
     private TextView comicsTitleTextView;
     private ImageView comicsImageView;
-    private PhotoViewAttacher comicsImageAttacher;
+
+    public XkcdAPI.ComicsInfo comicsInfo;
+
+    private MainActivity activity;
 
     public static ComicsFragment newInstance(int comicsNumber) {
         ComicsFragment fragment = new ComicsFragment();
@@ -38,7 +41,7 @@ public class ComicsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            comicsNumber = getArguments().getInt(ARG_COMICS_NUMBER);
+            comicsId = getArguments().getInt(ARG_COMICS_NUMBER);
         }
     }
 
@@ -50,9 +53,7 @@ public class ComicsFragment extends Fragment {
         comicsTitleTextView = (TextView)v.findViewById(R.id.comics_title);
         comicsImageView = (ImageView)v.findViewById(R.id.comics_image);
 
-        new DownloadComicsTask(this).execute(comicsNumber);
-
-        comicsImageAttacher = new PhotoViewAttacher(comicsImageView);
+        new DownloadComicsTask(this).execute(comicsId);
 
         return v;
     }
@@ -60,6 +61,7 @@ public class ComicsFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        this.activity = (MainActivity)activity;
     }
 
     @Override
@@ -68,16 +70,33 @@ public class ComicsFragment extends Fragment {
     }
 
     private void setComics(XkcdAPI.ComicsInfo result) {
+        comicsInfo = result;
+
         comicsTitleTextView.setText(result.title);
-        new DownloadImageTask(comicsImageView).execute(result.imageUrl);
+        new DownloadImageTask(comicsImageView, new PhotoViewAttacher(comicsImageView)).
+                execute(result.imageUrl);
+    }
+
+    public int getPrev() {
+        if (comicsInfo == null || comicsInfo.previous.isEmpty()) {
+            return comicsId;
+        } else {
+            return XkcdAPI.urlToId(comicsInfo.previous);
+        }
+    }
+
+    public int getNext() {
+        if (comicsInfo == null || comicsInfo.next.isEmpty()) {
+            return comicsId;
+        } else {
+            return XkcdAPI.urlToId(comicsInfo.next);
+        }
     }
 
     private class DownloadComicsTask extends AsyncTask<Integer, Void, XkcdAPI.ComicsInfo> {
         private ComicsFragment fragment;
 
-        public DownloadComicsTask(ComicsFragment fragment) {
-            this.fragment = fragment;
-        }
+        public DownloadComicsTask(ComicsFragment fragment) { this.fragment = fragment; }
 
         @Override
         protected XkcdAPI.ComicsInfo doInBackground(Integer... params) {
@@ -86,9 +105,7 @@ public class ComicsFragment extends Fragment {
             return XkcdAPI.getComicsByID(id);
         }
 
-        protected void onPostExecute(XkcdAPI.ComicsInfo result) {
-            fragment.setComics(result);
-        }
+        protected void onPostExecute(XkcdAPI.ComicsInfo result) { fragment.setComics(result); }
     }
 }
 
