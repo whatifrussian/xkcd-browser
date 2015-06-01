@@ -17,6 +17,13 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.container, new ComicsFragment())
                     .commit();
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                XkcdAPI.getComicsByUrl("http://xkcd.ru/1/");
+            }
+        }).start();
     }
 
 
