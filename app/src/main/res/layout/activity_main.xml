@@ -23,35 +23,35 @@
         android:layout_height="37dp" >
 
         <Button
-            android:id="@+id/first_article_button"
+            android:id="@+id/first_comics_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:text="@string/first_button" />
 
         <Button
-            android:id="@+id/prev_article_button"
+            android:id="@+id/prev_comics_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:text="@string/prev_button" />
 
         <Button
-            android:id="@+id/list_articles_button"
+            android:id="@+id/list_comics_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:text="@string/list_button" />
 
         <Button
-            android:id="@+id/next_article_button"
+            android:id="@+id/next_comics_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:text="@string/next_button" />
 
         <Button
-            android:id="@+id/last_article_button"
+            android:id="@+id/last_comics_button"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
