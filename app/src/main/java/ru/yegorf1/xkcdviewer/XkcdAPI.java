@@ -30,6 +30,10 @@ public class XkcdAPI {
         public ComicsInfo() { }
     }
 
+    public static ComicsInfo getComicsByID(int id) {
+        return  getComicsByURL("http://xkcd.ru/" + id + "/");
+    }
+
     public static ComicsInfo getComicsByURL(String url) {
         String jsonUrl = url + "?json=1";
         String json;
@@ -52,7 +56,7 @@ public class XkcdAPI {
             res.thumbnailUrl = jsonObj.getString("thumbnail");
             res.text = jsonObj.getString("text");
             res.comment = jsonObj.getString("comment");
-            res.originalUrl = jsonObj.getString("original");
+            res.originalUrl = jsonObj.getString("original_url");
             res.url = jsonObj.getString("url");
             res.next = jsonObj.getString("next");
             res.previous = jsonObj.getString("previous");
