@@ -1,6 +1,8 @@
 package ru.yegorf1.xkcdviewer;
 
+import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -11,6 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -60,13 +65,55 @@ public class XkcdAPI {
 
     public static ComicsInfo getComicsByURL(String url) {
         String jsonUrl = url + "?json=1";
-        String json;
+        String json = "";
 
-        try {
-            json = getPageSource(jsonUrl);
-        } catch (IOException ex) {
-            lastLoaded = new ComicsInfo();
-            return new ComicsInfo();
+        String filename = getWorkingDir() + "/j/" + urlToId(url) + ".json";
+
+        if (useStorage()) {
+            File jsonFile = new File(filename);
+            File jsonsDir = jsonFile.getParentFile();
+            jsonsDir.mkdirs();
+
+            if (jsonFile.exists()) {
+                StringBuilder text = new StringBuilder();
+
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(jsonFile));
+                    String line;
+
+                    while ((line = br.readLine()) != null) {
+                        text.append(line);
+                        text.append('\n');
+                    }
+                    br.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                json = text.toString();
+            }
+        }
+
+        if (json.equals("")) {
+            try {
+                json = getPageSource(jsonUrl);
+            } catch (IOException ex) {
+                lastLoaded = new ComicsInfo();
+                return new ComicsInfo();
+            }
+
+            if (useStorage()) {
+                FileOutputStream outputStream;
+
+                try {
+                    outputStream = new FileOutputStream(filename);
+                    outputStream.write(json.getBytes());
+                    outputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         JSONObject jsonObj;
