@@ -1,5 +1,6 @@
 package ru.yegorf1.xkcdviewer;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -41,10 +42,18 @@ public class MainActivity extends AppCompatActivity {
         nextButton = (Button) findViewById(R.id.next_comics_button);
         lastButton = (Button) findViewById(R.id.last_comics_button);
 
+        comicsListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ComicsListActivity.class);
+                startActivity(intent);
+            }
+        });
+
         firstButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openComics(1);
+                 openComics(1);
             }
         });
         prevButton.setOnClickListener(new View.OnClickListener() {
