@@ -34,7 +34,7 @@ public class ComicsListActivity extends ListActivity {
     protected void onListItemClick(ListView list, View view, int position, long id) {
         super.onListItemClick(list, view, position, id);
 
-        String selectedItem = (String) getListAdapter().getItem(position);
+        String selectedItem = ((XkcdAPI.BaseComicsInfo) getListAdapter().getItem(position)).title;
 
         if (selectedItem != null) {
             Toast.makeText(getApplicationContext(), "You clicked " + selectedItem + " at position " + position, Toast.LENGTH_SHORT).show();
