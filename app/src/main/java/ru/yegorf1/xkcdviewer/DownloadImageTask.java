@@ -43,7 +43,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         String path = url.getPath();
         String imagePath = Environment.getExternalStorageDirectory().toString() + "/xkcd" + path;
 
-        if (useStorage()) {
+        if (XkcdAPI.useStorage()) {
             File imageFile = new File(imagePath);
             if (imageFile.exists()) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
@@ -69,7 +69,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     private void saveBitmap(String filename, Bitmap bitmap) {
-        if (!useStorage()) { return; }
+        if (!XkcdAPI.useStorage()) { return; }
 
         File imageFile = new File(filename);
         File parent = imageFile.getParentFile();
@@ -99,11 +99,5 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         if (attacher != null) {
             attacher.update();
         }
-    }
-
-    public boolean useStorage() {
-        String state = Environment.getExternalStorageState();
-
-        return Environment.MEDIA_MOUNTED.equals(state);
     }
 }

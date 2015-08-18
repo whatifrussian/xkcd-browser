@@ -1,5 +1,7 @@
 package ru.yegorf1.xkcdviewer;
 
+import android.os.Environment;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -44,6 +46,12 @@ public class XkcdAPI {
         info.id = id;
 
         return info;
+    }
+
+    public static boolean useStorage() {
+        String state = Environment.getExternalStorageState();
+
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     public static ComicsInfo getComicsByURL(String url) {
