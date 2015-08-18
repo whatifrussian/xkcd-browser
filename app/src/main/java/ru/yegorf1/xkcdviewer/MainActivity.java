@@ -13,6 +13,9 @@ import android.widget.Button;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final int CHOOSE_COMICS = 42;
+
+
     private Button firstButton;
     private Button prevButton;
     private Button comicsListButton;
@@ -29,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    int last = XkcdAPI.getLastComicsId();
+                int last = XkcdAPI.getLastComicsId();
 
-                    openComics(last);
+                openComics(last);
                 }
             }).start();
         }
@@ -45,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         comicsListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ComicsListActivity.class);
-                startActivity(intent);
+                openComicsList();
             }
         });
 
@@ -75,6 +77,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void openComicsList() {
+        Intent chooseComicsIntent = new Intent(getApplicationContext(), ComicsListActivity.class);
+        startActivityForResult(chooseComicsIntent, CHOOSE_COMICS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CHOOSE_COMICS && resultCode == RESULT_OK && data != null) {
+            int comicsId = data.getIntExtra("id", 1);
+            openComics(comicsId);
+        }
+    }
+
 
     public void openComics(int id) {
         currentFragment = ComicsFragment.newInstance(id);

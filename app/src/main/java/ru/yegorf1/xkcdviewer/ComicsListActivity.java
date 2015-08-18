@@ -1,6 +1,7 @@
 package ru.yegorf1.xkcdviewer;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -34,10 +35,13 @@ public class ComicsListActivity extends ListActivity {
     protected void onListItemClick(ListView list, View view, int position, long id) {
         super.onListItemClick(list, view, position, id);
 
-        String selectedItem = ((XkcdAPI.BaseComicsInfo) getListAdapter().getItem(position)).title;
+        XkcdAPI.BaseComicsInfo info = ((XkcdAPI.BaseComicsInfo) getListAdapter().getItem(position));
 
-        if (selectedItem != null) {
-            Toast.makeText(getApplicationContext(), "You clicked " + selectedItem + " at position " + position, Toast.LENGTH_SHORT).show();
+        if (info != null) {
+            Intent intent = new Intent();
+            intent.putExtra("id", info.id);
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
