@@ -13,7 +13,7 @@
         android:textAlignment="center"
         android:textStyle="bold" />
 
-    <ImageView
+    <uk.co.senab.photoview.PhotoView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/comics_image"

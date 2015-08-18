@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
@@ -18,7 +18,7 @@ public class ComicsFragment extends Fragment {
 
     private int comicsId;
     private TextView comicsTitleTextView;
-    private ImageView comicsImageView;
+    private PhotoView comicsPhotoView;
 
     public XkcdAPI.ComicsInfo comicsInfo;
 
@@ -51,7 +51,7 @@ public class ComicsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_comics, container, false);
 
         comicsTitleTextView = (TextView)v.findViewById(R.id.comics_title);
-        comicsImageView = (ImageView)v.findViewById(R.id.comics_image);
+        comicsPhotoView = (PhotoView)v.findViewById(R.id.comics_image);
 
         new DownloadComicsTask(this).execute(comicsId);
 
@@ -65,15 +65,13 @@ public class ComicsFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+    public void onDetach() { super.onDetach(); }
 
     private void setComics(XkcdAPI.ComicsInfo result) {
         comicsInfo = result;
 
         comicsTitleTextView.setText(result.title);
-        new DownloadImageTask(comicsImageView, new PhotoViewAttacher(comicsImageView)).
+        new DownloadImageTask(comicsPhotoView, new PhotoViewAttacher(comicsPhotoView)).
                 execute(result.imageUrl);
     }
 
