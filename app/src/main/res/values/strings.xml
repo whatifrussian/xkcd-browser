@@ -11,4 +11,6 @@
     <string name="title_activity_comics_list_acivity">Comics list</string>
 
     <string name="title_activity_comics_list">ComicsListActivity</string>
+    <string name="action_copy">Copy link</string>
+    <string name="action_share">Share</string>
 </resources>

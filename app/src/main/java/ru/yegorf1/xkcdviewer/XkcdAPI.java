@@ -1,11 +1,6 @@
 package ru.yegorf1.xkcdviewer;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -34,7 +29,8 @@ public class XkcdAPI {
         public String thumbnailUrl;
         public String url;
 
-        public BaseComicsInfo() { }
+        public BaseComicsInfo() {
+        }
 
         public BaseComicsInfo(JSONObject jsonInfo) throws JSONException {
             this.title = jsonInfo.getString("title");
@@ -60,7 +56,8 @@ public class XkcdAPI {
         public String last;
         public String random;
 
-        public ComicsInfo() { }
+        public ComicsInfo() {
+        }
     }
 
     private static ComicsInfo lastLoaded;
@@ -142,7 +139,8 @@ public class XkcdAPI {
             lastLoaded = res;
 
             return res;
-        } catch (JSONException ignored) { }
+        } catch (JSONException ignored) {
+        }
 
         lastLoaded = new ComicsInfo();
 
@@ -161,8 +159,7 @@ public class XkcdAPI {
                 text.append('\n');
             }
             br.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -199,7 +196,9 @@ public class XkcdAPI {
         if (MainActivity.isOffline()) {
             int n = info.id + 1;
 
-            while (!saved(n) && n < getLastComicsId()) { n++; }
+            while (!saved(n) && n < getLastComicsId()) {
+                n++;
+            }
 
             return n;
         } else {
@@ -211,7 +210,9 @@ public class XkcdAPI {
         if (MainActivity.isOffline()) {
             int n = info.id - 1;
 
-            while (!saved(n) && n > 0) { n--; }
+            while (!saved(n) && n > 0) {
+                n--;
+            }
 
             return n;
         } else {
@@ -226,7 +227,7 @@ public class XkcdAPI {
     }
 
     public static int urlToId(String url) {
-        return Integer.parseInt(url.replaceAll("\\D+",""));
+        return Integer.parseInt(url.replaceAll("\\D+", ""));
     }
 
     public static List<BaseComicsInfo> getComicsList() {
@@ -276,7 +277,8 @@ public class XkcdAPI {
                     }
                 }
 
-            } catch (JSONException ignored) { }
+            } catch (JSONException ignored) {
+            }
         }
 
         return res;
@@ -291,8 +293,7 @@ public class XkcdAPI {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder str = new StringBuilder();
         String line;
-        while((line = reader.readLine()) != null)
-        {
+        while ((line = reader.readLine()) != null) {
             str.append(line);
         }
         in.close();

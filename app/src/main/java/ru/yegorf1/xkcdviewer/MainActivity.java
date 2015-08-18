@@ -2,10 +2,15 @@ package ru.yegorf1.xkcdviewer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +18,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     private static Context context;
@@ -39,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                int last = XkcdAPI.getLastComicsId();
+                    int last = XkcdAPI.getLastComicsId();
 
-                openComics(last);
+                    openComics(last);
                 }
             }).start();
         }
@@ -54,23 +65,33 @@ public class MainActivity extends AppCompatActivity {
 
         firstButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { openComics(XkcdAPI.getFirstComicsId()); }
+            public void onClick(View v) {
+                openComics(XkcdAPI.getFirstComicsId());
+            }
         });
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { openComics(currentFragment.getPrev());  }
+            public void onClick(View v) {
+                openComics(currentFragment.getPrev());
+            }
         });
         comicsListButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { openComicsList(); }
+            public void onClick(View v) {
+                openComicsList();
+            }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { openComics(currentFragment.getNext()); }
+            public void onClick(View v) {
+                openComics(currentFragment.getNext());
+            }
         });
         lastButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { openComics(XkcdAPI.getLastComicsId()); }
+            public void onClick(View v) {
+                openComics(XkcdAPI.getLastComicsId());
+            }
         });
     }
 
@@ -105,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
             prevButton.setTextColor(isFirst ? Color.GRAY : Color.BLACK);
 
             comicsListButton.setText("#" + id);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -128,10 +150,44 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        switch (id) {
+            case R.id.action_share:
+                Bitmap b = currentFragment.getImage();
+                if (b == null) {
+                    Toast.makeText(getApplicationContext(), "Image still loading", Toast.LENGTH_SHORT);
+                } else {
+                    XkcdAPI.ComicsInfo c = currentFragment.comicsInfo;
+
+                    String folder = XkcdAPI.getWorkingDir();
+                    String path = folder + "/share_" + System.currentTimeMillis() + ".png";
+                    try {
+                        new DownloadImageTask(path).execute(c.imageUrl).get();
+                    } catch (ExecutionException e) { e.printStackTrace();
+                    } catch (InterruptedException e) { e.printStackTrace(); }
+                    Uri bmpUri = Uri.fromFile(new File(path));
+
+                    Intent share = new Intent(Intent.ACTION_SEND);
+                    share.setType("image/png");
+                    share.putExtra(Intent.EXTRA_TEXT, c.title + "\n" + c.url);
+                    share.putExtra(Intent.EXTRA_STREAM, bmpUri);
+                    startActivity(Intent.createChooser(share, "Share Image"));
+                }
+                break;
+        }
+
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
 
     }
 
+    public Uri getLocalBitmapUri(Bitmap bmp) {
+        String folder = getApplicationContext().getCacheDir().toString();
+        String filename = folder + "/share_image_" + System.currentTimeMillis() + ".png";
+
+        DownloadImageTask.saveBitmap(filename, bmp);
+        Toast.makeText(getApplicationContext(), filename, Toast.LENGTH_SHORT).show();
+
+        return Uri.fromFile(new File(filename));
+    }
 
     public static boolean isOffline() {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -145,3 +201,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+

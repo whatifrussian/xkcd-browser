@@ -19,10 +19,16 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     private ImageView bmImage;
     private PhotoViewAttacher attacher;
+    private String path;
+
+    public DownloadImageTask(String path) {
+        this.path = path;
+    }
 
     public DownloadImageTask(ImageView bmImage) {
         this.bmImage = bmImage;
     }
+
     public DownloadImageTask(ImageView bmImage, PhotoViewAttacher attacher) {
         this.bmImage = bmImage;
         this.attacher = attacher;
@@ -39,16 +45,20 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
             e.printStackTrace();
             return null;
         }
+        String path;
 
-        String path = url.getPath();
-        String imagePath = XkcdAPI.getWorkingDir() + path;
+        if (this.path != null) {
+            path = this.path;
+        } else {
+            path = XkcdAPI.getWorkingDir() + url.getPath();
+        }
 
         if (XkcdAPI.useStorage()) {
-            File imageFile = new File(imagePath);
+            File imageFile = new File(path);
             if (imageFile.exists()) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 
                 return bitmap;
             }
@@ -63,14 +73,14 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
             return null;
         }
 
-        saveBitmap(imagePath, mIcon11);
+        if (!XkcdAPI.useStorage() || this.path != null) {
+            saveBitmap(path, mIcon11);
+        }
 
         return mIcon11;
     }
 
-    private void saveBitmap(String filename, Bitmap bitmap) {
-        if (!XkcdAPI.useStorage()) { return; }
-
+    public static void saveBitmap(String filename, Bitmap bitmap) {
         File imageFile = new File(filename);
         File parent = imageFile.getParentFile();
 
@@ -94,10 +104,11 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
-
-        bmImage.setImageBitmap(result);
-        if (attacher != null) {
-            attacher.update();
+        if (bmImage != null) {
+            bmImage.setImageBitmap(result);
+            if (attacher != null) {
+                attacher.update();
+            }
         }
     }
 }

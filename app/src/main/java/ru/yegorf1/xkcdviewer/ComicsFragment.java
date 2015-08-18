@@ -1,6 +1,9 @@
 package ru.yegorf1.xkcdviewer;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -88,6 +91,15 @@ public class ComicsFragment extends Fragment {
             return comicsId;
         } else {
             return XkcdAPI.getNextComics(comicsInfo);
+        }
+    }
+
+    public Bitmap getImage() {
+        Drawable drawable = comicsPhotoView.getDrawable();
+        if (drawable == null) {
+            return null;
+        } else {
+            return ((BitmapDrawable) drawable).getBitmap();
         }
     }
 
