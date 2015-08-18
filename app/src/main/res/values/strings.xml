@@ -8,8 +8,6 @@
     <string name="next_button">next ›</string>
     <string name="last_button">last »</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_comics_list_acivity">ComicsListAcivity</string>
 
     <string name="hello_world">Hello world!</string>
