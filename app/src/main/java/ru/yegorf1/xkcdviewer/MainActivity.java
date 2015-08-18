@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        context = getApplicationContext();
+
         if (savedInstanceState == null) {
             new Thread(new Runnable() {
                 @Override
@@ -80,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 openComics(XkcdAPI.getLastComicsId());
             }
         });
-
-        context = getApplicationContext();
     }
 
     private void openComicsList() {
