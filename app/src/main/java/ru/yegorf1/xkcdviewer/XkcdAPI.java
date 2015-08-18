@@ -28,6 +28,13 @@ public class XkcdAPI {
         public String title;
         public String thumbnailUrl;
         public String url;
+
+        public BaseComicsInfo(JSONObject jsonInfo) throws JSONException {
+            this.id = jsonInfo.getInt("id");
+            this.title = jsonInfo.getString("title");
+            this.thumbnailUrl = jsonInfo.getString("thumbnail");
+            this.url = jsonInfo.getString("url");
+        }
     }
 
     public static class ComicsInfo extends BaseComicsInfo {
@@ -194,12 +201,7 @@ public class XkcdAPI {
                 try {
                     JSONObject jsonInfo = list.getJSONObject(i);
 
-                    BaseComicsInfo info = new BaseComicsInfo();
-
-                    info.id = jsonInfo.getInt("id");
-                    info.title = jsonInfo.getString("title");
-                    info.thumbnailUrl = jsonInfo.getString("thumbnail");
-                    info.url = jsonInfo.getString("url");
+                    BaseComicsInfo info = new BaseComicsInfo(jsonInfo);
 
                     res.add(info);
                 } catch (JSONException ignored) { }
