@@ -52,36 +52,25 @@ public class MainActivity extends AppCompatActivity {
         nextButton = (Button) findViewById(R.id.next_comics_button);
         lastButton = (Button) findViewById(R.id.last_comics_button);
 
-        comicsListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openComicsList();
-            }
-        });
-
         firstButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                 openComics(1);
-            }
+            public void onClick(View v) { openComics(XkcdAPI.getFirstComicsId()); }
         });
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                openComics(currentFragment.getPrev());
-            }
+            public void onClick(View v) { openComics(currentFragment.getPrev());  }
+        });
+        comicsListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { openComicsList(); }
         });
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                openComics(currentFragment.getNext());
-            }
+            public void onClick(View v) { openComics(currentFragment.getNext()); }
         });
         lastButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                openComics(XkcdAPI.getLastComicsId());
-            }
+            public void onClick(View v) { openComics(XkcdAPI.getLastComicsId()); }
         });
     }
 
@@ -103,13 +92,13 @@ public class MainActivity extends AppCompatActivity {
         currentFragment = ComicsFragment.newInstance(id);
 
         try {
-            boolean isLast = id == XkcdAPI.getLastComicsId(false);
+            boolean isLast = id == XkcdAPI.getLastComicsId();
             lastButton.setClickable(!isLast);
             lastButton.setTextColor(isLast ? Color.GRAY : Color.BLACK);
             nextButton.setClickable(!isLast);
             nextButton.setTextColor(isLast ? Color.GRAY : Color.BLACK);
 
-            boolean isFirst = id == 1;
+            boolean isFirst = id == XkcdAPI.getFirstComicsId();
             firstButton.setClickable(!isFirst);
             prevButton.setClickable(!isFirst);
             firstButton.setTextColor(isFirst ? Color.GRAY : Color.BLACK);

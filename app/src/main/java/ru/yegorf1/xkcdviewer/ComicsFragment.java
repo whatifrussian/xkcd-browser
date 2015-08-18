@@ -79,7 +79,7 @@ public class ComicsFragment extends Fragment {
         if (comicsInfo == null || comicsInfo.previous.isEmpty()) {
             return comicsId;
         } else {
-            return XkcdAPI.urlToId(comicsInfo.previous);
+            return XkcdAPI.getPrevComics(comicsInfo);
         }
     }
 
@@ -87,7 +87,7 @@ public class ComicsFragment extends Fragment {
         if (comicsInfo == null || comicsInfo.next.isEmpty()) {
             return comicsId;
         } else {
-            return XkcdAPI.urlToId(comicsInfo.next);
+            return XkcdAPI.getNextComics(comicsInfo);
         }
     }
 

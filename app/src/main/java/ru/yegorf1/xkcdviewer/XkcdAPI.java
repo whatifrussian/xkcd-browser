@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -182,7 +183,7 @@ public class XkcdAPI {
             List<BaseComicsInfo> infos = getComicsList();
             return getComicsByURL(infos.get(0).url).url;
         } else {
-            return lastLoaded.last;
+            return lastLoaded.first;
         }
     }
 
@@ -194,6 +195,35 @@ public class XkcdAPI {
         return urlToId(getFirstComicsURL());
     }
 
+    public static int getNextComics(ComicsInfo info) {
+        if (MainActivity.isOffline()) {
+            int n = info.id + 1;
+
+            while (!saved(n) && n < getLastComicsId()) { n++; }
+
+            return n;
+        } else {
+            return urlToId(info.next);
+        }
+    }
+
+    public static int getPrevComics(ComicsInfo info) {
+        if (MainActivity.isOffline()) {
+            int n = info.id - 1;
+
+            while (!saved(n) && n > 0) { n--; }
+
+            return n;
+        } else {
+            return urlToId(info.previous);
+        }
+    }
+
+    private static boolean saved(int id) {
+        String filename = getWorkingDir() + "/j/" + id + ".json";
+
+        return new File(filename).exists();
+    }
 
     public static int urlToId(String url) {
         return Integer.parseInt(url.replaceAll("\\D+",""));
@@ -220,7 +250,7 @@ public class XkcdAPI {
                     e.printStackTrace();
                 }
             }
-            
+
             Collections.sort(res);
         } else {
             String json;
