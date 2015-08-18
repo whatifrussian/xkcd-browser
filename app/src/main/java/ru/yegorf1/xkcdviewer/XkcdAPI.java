@@ -22,10 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class XkcdAPI {
-    public static class BaseComicsInfo {
+
+    public static class BaseComicsInfo implements Comparable<BaseComicsInfo> {
         public int id;
         public String title;
         public String thumbnailUrl;
@@ -38,6 +40,11 @@ public class XkcdAPI {
             this.thumbnailUrl = jsonInfo.getString("thumbnail");
             this.url = jsonInfo.getString("url");
             this.id = urlToId(this.url);
+        }
+
+        @Override
+        public int compareTo(BaseComicsInfo b) {
+            return id - b.id;
         }
     }
 
@@ -162,9 +169,18 @@ public class XkcdAPI {
     }
 
     public static String getLastComicsURL() {
-        if (lastLoaded == null || lastLoaded.equals(new ComicsInfo())) {
+        if (MainActivity.isOffline() || lastLoaded == null || lastLoaded.equals(new ComicsInfo())) {
             List<BaseComicsInfo> infos = getComicsList();
             return getComicsByURL(infos.get(infos.size() - 1).url).url;
+        } else {
+            return lastLoaded.last;
+        }
+    }
+
+    private static String getFirstComicsURL() {
+        if (MainActivity.isOffline() || lastLoaded == null || lastLoaded.equals(new ComicsInfo())) {
+            List<BaseComicsInfo> infos = getComicsList();
+            return getComicsByURL(infos.get(0).url).url;
         } else {
             return lastLoaded.last;
         }
@@ -174,14 +190,8 @@ public class XkcdAPI {
         return urlToId(getLastComicsURL());
     }
 
-    public static int getLastComicsId(boolean canUseInternet) {
-        if (canUseInternet) {
-            return  getLastComicsId();
-        } else if (lastLoaded != null) {
-            return urlToId(lastLoaded.last);
-        } else {
-            return 0;
-        }
+    public static int getFirstComicsId() {
+        return urlToId(getFirstComicsURL());
     }
 
 
@@ -210,6 +220,8 @@ public class XkcdAPI {
                     e.printStackTrace();
                 }
             }
+            
+            Collections.sort(res);
         } else {
             String json;
 
