@@ -15,7 +15,6 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     private static final int CHOOSE_COMICS = 42;
 
-
     private Button firstButton;
     private Button prevButton;
     private Button comicsListButton;
