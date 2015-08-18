@@ -1,6 +1,8 @@
 package ru.yegorf1.xkcdviewer;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.Log;
 
@@ -29,11 +31,13 @@ public class XkcdAPI {
         public String thumbnailUrl;
         public String url;
 
+        public BaseComicsInfo() { }
+
         public BaseComicsInfo(JSONObject jsonInfo) throws JSONException {
-            this.id = jsonInfo.getInt("id");
             this.title = jsonInfo.getString("title");
             this.thumbnailUrl = jsonInfo.getString("thumbnail");
             this.url = jsonInfo.getString("url");
+            this.id = urlToId(this.url);
         }
     }
 
@@ -82,23 +86,7 @@ public class XkcdAPI {
             jsonsDir.mkdirs();
 
             if (jsonFile.exists()) {
-                StringBuilder text = new StringBuilder();
-
-                try {
-                    BufferedReader br = new BufferedReader(new FileReader(jsonFile));
-                    String line;
-
-                    while ((line = br.readLine()) != null) {
-                        text.append(line);
-                        text.append('\n');
-                    }
-                    br.close();
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                json = text.toString();
+                json = readFileToEnd(jsonFile);
             }
         }
 
@@ -153,6 +141,26 @@ public class XkcdAPI {
         return new ComicsInfo();
     }
 
+    private static String readFileToEnd(File file) {
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return text.toString();
+    }
+
     public static String getLastComicsURL() {
         if (lastLoaded == null || lastLoaded.equals(new ComicsInfo())) {
             List<BaseComicsInfo> infos = getComicsList();
@@ -185,29 +193,49 @@ public class XkcdAPI {
         List<BaseComicsInfo> res = new ArrayList<>();
 
         String jsonUrl = "http://xkcd.ru/num/?json=1";
-        String json;
 
-        try {
-            json = getPageSource(jsonUrl);
-        } catch (IOException ex) {
-            return res;
-        }
+        if (MainActivity.isOffline()) {
+            File jsonDir = new File(getWorkingDir() + "/j/");
+            File[] jsons = jsonDir.listFiles();
 
-        try {
-            JSONObject jsonObj = new JSONObject(json);
-            JSONArray list = jsonObj.getJSONArray("list");
+            for (File j : jsons) {
+                String json = readFileToEnd(j);
 
-            for (int i = 0; i < list.length(); i++) {
                 try {
-                    JSONObject jsonInfo = list.getJSONObject(i);
-
+                    JSONObject jsonInfo = new JSONObject(json);
                     BaseComicsInfo info = new BaseComicsInfo(jsonInfo);
 
                     res.add(info);
-                } catch (JSONException ignored) { }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            String json;
+
+            try {
+                json = getPageSource(jsonUrl);
+            } catch (IOException ex) {
+                return res;
             }
 
-        } catch (JSONException ignored) { }
+            try {
+                JSONObject jsonObj = new JSONObject(json);
+                JSONArray list = jsonObj.getJSONArray("list");
+
+                for (int i = 0; i < list.length(); i++) {
+                    try {
+                        JSONObject jsonInfo = list.getJSONObject(i);
+
+                        BaseComicsInfo info = new BaseComicsInfo(jsonInfo);
+
+                        res.add(info);
+                    } catch (JSONException ignored) {
+                    }
+                }
+
+            } catch (JSONException ignored) { }
+        }
 
         return res;
     }

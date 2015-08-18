@@ -1,7 +1,10 @@
 package ru.yegorf1.xkcdviewer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +16,8 @@ import android.widget.Button;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static Context context;
+
     private static final int CHOOSE_COMICS = 42;
 
     private Button firstButton;
@@ -75,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 openComics(XkcdAPI.getLastComicsId());
             }
         });
+
+        context = getApplicationContext();
     }
 
     private void openComicsList() {
@@ -133,5 +140,18 @@ public class MainActivity extends AppCompatActivity {
 
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
 
+    }
+
+
+    public static boolean isOffline() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiInfo != null && wifiInfo.isConnected()) || (mobileInfo != null && mobileInfo.isConnected())) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
