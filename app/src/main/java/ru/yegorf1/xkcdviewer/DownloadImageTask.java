@@ -41,7 +41,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         }
 
         String path = url.getPath();
-        String imagePath = Environment.getExternalStorageDirectory().toString() + "/xkcd" + path;
+        String imagePath = XkcdAPI.getWorkingDir() + path;
 
         if (XkcdAPI.useStorage()) {
             File imageFile = new File(imagePath);

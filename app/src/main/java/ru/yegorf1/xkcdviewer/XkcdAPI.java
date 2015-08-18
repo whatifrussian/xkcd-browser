@@ -54,6 +54,10 @@ public class XkcdAPI {
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
+    public static String getWorkingDir() {
+        return Environment.getExternalStorageDirectory().toString() + "/xkcd";
+    }
+
     public static ComicsInfo getComicsByURL(String url) {
         String jsonUrl = url + "?json=1";
         String json;
