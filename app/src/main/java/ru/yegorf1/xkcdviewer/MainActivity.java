@@ -199,6 +199,10 @@ public class MainActivity extends AppCompatActivity {
                 ClipData clip = ClipData.newPlainText(c.title, c.url);
                 clipboard.setPrimaryClip(clip);
                 break;
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(settingsIntent);
+                break;
         }
 
         return id == R.id.action_settings || super.onOptionsItemSelected(item);
