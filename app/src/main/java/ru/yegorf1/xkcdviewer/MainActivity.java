@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         transaction.replace(R.id.container, currentFragment);
-        transaction.addToBackStack(null);
 
         transaction.commitAllowingStateLoss();
     }

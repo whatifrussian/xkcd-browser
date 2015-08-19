@@ -7,10 +7,12 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -68,14 +70,24 @@ public class ComicsFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() { super.onDetach(); }
+    public void onDetach() {
+        Drawable drawable = comicsPhotoView.getDrawable();
+        if (drawable != null) {
+            ((BitmapDrawable) drawable).getBitmap().recycle();
+        }
+
+        comicsPhotoView = null;
+        super.onDetach();
+    }
 
     private void setComics(XkcdAPI.ComicsInfo result) {
-        comicsInfo = result;
+        if (comicsPhotoView != null) {
+            comicsInfo = result;
 
-        comicsTitleTextView.setText(result.title);
-        new DownloadImageTask(comicsPhotoView, new PhotoViewAttacher(comicsPhotoView)).
-                execute(result.imageUrl);
+            comicsTitleTextView.setText(result.title);
+            new DownloadImageTask(comicsPhotoView, new PhotoViewAttacher(comicsPhotoView)).
+                    execute(result.imageUrl);
+        }
     }
 
     public int getPrev() {
