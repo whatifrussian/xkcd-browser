@@ -117,9 +117,7 @@ public class ComicsFragment extends Fragment {
     }
 
     public boolean isZoomed() {
-        String z = comicsImageView.getScaleX() + " " + comicsImageView.getScaleY();
-        Toast.makeText(activity, z, Toast.LENGTH_LONG).show();
-        return true;
+        return (attacher.getScale() - 1) > 10E-10;
     }
 
     private class DownloadComicsTask extends AsyncTask<Integer, Void, XkcdAPI.ComicsInfo> {
