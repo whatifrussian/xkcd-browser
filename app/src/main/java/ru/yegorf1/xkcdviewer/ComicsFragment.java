@@ -7,16 +7,13 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
@@ -25,7 +22,8 @@ public class ComicsFragment extends Fragment {
 
     private int comicsId;
     private TextView comicsTitleTextView;
-    private ImageView comicsPhotoView;
+    private ImageView comicsImageView;
+    private PhotoViewAttacher attacher;
 
     public XkcdAPI.ComicsInfo comicsInfo;
 
@@ -58,7 +56,7 @@ public class ComicsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_comics, container, false);
 
         comicsTitleTextView = (TextView)v.findViewById(R.id.comics_title);
-        comicsPhotoView = (ImageView)v.findViewById(R.id.comics_image);
+        comicsImageView = (ImageView)v.findViewById(R.id.comics_image);
 
         new DownloadComicsTask(this).execute(comicsId);
 
@@ -73,21 +71,23 @@ public class ComicsFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Drawable drawable = comicsPhotoView.getDrawable();
+        Drawable drawable = comicsImageView.getDrawable();
         if (drawable != null) {
             ((BitmapDrawable) drawable).getBitmap().recycle();
         }
 
-        comicsPhotoView = null;
+        comicsImageView = null;
         super.onDetach();
     }
 
     private void setComics(XkcdAPI.ComicsInfo result) {
-        if (comicsPhotoView != null) {
+        if (comicsImageView != null) {
             comicsInfo = result;
 
             comicsTitleTextView.setText(result.title);
-            new DownloadImageTask(comicsPhotoView).execute(result.imageUrl);
+            attacher = new PhotoViewAttacher(comicsImageView);
+
+            new DownloadImageTask(comicsImageView, attacher).execute(result.imageUrl);
         }
     }
 
@@ -108,12 +108,18 @@ public class ComicsFragment extends Fragment {
     }
 
     public Bitmap getImage() {
-        Drawable drawable = comicsPhotoView.getDrawable();
+        Drawable drawable = comicsImageView.getDrawable();
         if (drawable == null) {
             return null;
         } else {
             return ((BitmapDrawable) drawable).getBitmap();
         }
+    }
+
+    public boolean isZoomed() {
+        String z = comicsImageView.getScaleX() + " " + comicsImageView.getScaleY();
+        Toast.makeText(activity, z, Toast.LENGTH_LONG).show();
+        return true;
     }
 
     private class DownloadComicsTask extends AsyncTask<Integer, Void, XkcdAPI.ComicsInfo> {

@@ -53,12 +53,16 @@ public class MainActivity extends AppCompatActivity {
         comicsLayout.setSwipeListener(new ComicsLayout.SwipeListener() {
             @Override
             public void onLeftSlide() {
-                openComics(currentFragment.getNext());
+                if (!currentFragment.isZoomed()) {
+                    openComics(currentFragment.getNext());
+                }
             }
 
             @Override
             public void onRightSlide() {
-                openComics(currentFragment.getPrev());
+                if (!currentFragment.isZoomed()) {
+                    openComics(currentFragment.getPrev());
+                }
             }
         });
 
@@ -128,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void openComics(final int id) {
+        if (currentFragment != null && currentFragment.comicsInfo.id == id) { return; }
+
         currentFragment = ComicsFragment.newInstance(id);
 
         final boolean isLast = id == XkcdAPI.getLastComicsId();
