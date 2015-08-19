@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +25,7 @@ public class ComicsFragment extends Fragment {
 
     private int comicsId;
     private TextView comicsTitleTextView;
-    private PhotoView comicsPhotoView;
+    private ImageView comicsPhotoView;
 
     public XkcdAPI.ComicsInfo comicsInfo;
 
@@ -56,7 +58,7 @@ public class ComicsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_comics, container, false);
 
         comicsTitleTextView = (TextView)v.findViewById(R.id.comics_title);
-        comicsPhotoView = (PhotoView)v.findViewById(R.id.comics_image);
+        comicsPhotoView = (ImageView)v.findViewById(R.id.comics_image);
 
         new DownloadComicsTask(this).execute(comicsId);
 
@@ -85,8 +87,7 @@ public class ComicsFragment extends Fragment {
             comicsInfo = result;
 
             comicsTitleTextView.setText(result.title);
-            new DownloadImageTask(comicsPhotoView, new PhotoViewAttacher(comicsPhotoView)).
-                    execute(result.imageUrl);
+            new DownloadImageTask(comicsPhotoView).execute(result.imageUrl);
         }
     }
 

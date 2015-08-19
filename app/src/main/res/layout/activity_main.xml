@@ -4,9 +4,11 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:ignore="MergeRootFrame"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:clickable="true" >
 
-    <LinearLayout
+    <ru.yegorf1.xkcdviewer.ComicsLayout
+        android:id="@+id/fragmentLayout"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -16,8 +18,9 @@
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-    </LinearLayout>
+            android:layout_height="fill_parent"
+            android:clickable="true" />
+    </ru.yegorf1.xkcdviewer.ComicsLayout>
 
     <LinearLayout
         android:orientation="horizontal"

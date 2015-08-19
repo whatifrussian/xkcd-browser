@@ -19,7 +19,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -46,6 +48,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         context = getApplicationContext();
+
+        ComicsLayout comicsLayout = (ComicsLayout)findViewById(R.id.fragmentLayout);
+        comicsLayout.setSwipeListener(new ComicsLayout.SwipeListener() {
+            @Override
+            public void onLeftSlide() {
+                openComics(currentFragment.getNext());
+            }
+
+            @Override
+            public void onRightSlide() {
+                openComics(currentFragment.getPrev());
+            }
+        });
 
         firstButton = (Button) findViewById(R.id.first_comics_button);
         prevButton = (Button) findViewById(R.id.prev_comics_button);
