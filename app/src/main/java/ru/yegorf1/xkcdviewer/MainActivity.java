@@ -1,5 +1,7 @@
 package ru.yegorf1.xkcdviewer;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -149,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        XkcdAPI.ComicsInfo c = currentFragment.comicsInfo;
 
         switch (id) {
             case R.id.action_share:
@@ -156,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
                 if (b == null) {
                     Toast.makeText(getApplicationContext(), "Image still loading", Toast.LENGTH_SHORT);
                 } else {
-                    XkcdAPI.ComicsInfo c = currentFragment.comicsInfo;
 
                     String folder = XkcdAPI.getWorkingDir();
                     String path = folder + "/share_" + System.currentTimeMillis() + ".png";
@@ -172,6 +174,11 @@ public class MainActivity extends AppCompatActivity {
                     share.putExtra(Intent.EXTRA_STREAM, bmpUri);
                     startActivity(Intent.createChooser(share, "Share Image"));
                 }
+                break;
+            case R.id.action_copy:
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText(c.title, c.url);
+                clipboard.setPrimaryClip(clip);
                 break;
         }
 
