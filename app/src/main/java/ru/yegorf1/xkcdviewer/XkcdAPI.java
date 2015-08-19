@@ -72,7 +72,7 @@ public class XkcdAPI {
     public static boolean useStorage() {
         String state = Environment.getExternalStorageState();
 
-        return Environment.MEDIA_MOUNTED.equals(state);
+        return Environment.MEDIA_MOUNTED.equals(state) && MainActivity.useStorage();
     }
 
     public static String getWorkingDir() {

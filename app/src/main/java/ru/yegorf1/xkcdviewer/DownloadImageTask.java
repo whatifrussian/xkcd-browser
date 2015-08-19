@@ -73,7 +73,7 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
             return null;
         }
 
-        if (!XkcdAPI.useStorage() || this.path != null) {
+        if (XkcdAPI.useStorage() || path.equals(this.path)) {
             saveBitmap(path, mIcon11);
         }
 
