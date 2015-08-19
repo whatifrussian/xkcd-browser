@@ -10,9 +10,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
     private static Context context;
@@ -41,17 +44,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         context = getApplicationContext();
-
-        if (savedInstanceState == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    int last = XkcdAPI.getLastComicsId();
-
-                    openComics(last);
-                }
-            }).start();
-        }
 
         firstButton = (Button) findViewById(R.id.first_comics_button);
         prevButton = (Button) findViewById(R.id.prev_comics_button);
@@ -89,6 +81,19 @@ public class MainActivity extends AppCompatActivity {
                 openComics(XkcdAPI.getLastComicsId());
             }
         });
+
+        if (savedInstanceState == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int last = XkcdAPI.getLastComicsId();
+
+                    Log.d("Last", last + " loaded");
+
+                    openComics(last);
+                }
+            }).start();
+        }
     }
 
     private void openComicsList() {
@@ -105,25 +110,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void openComics(int id) {
+    public void openComics(final int id) {
         currentFragment = ComicsFragment.newInstance(id);
 
-        try {
-            boolean isLast = id == XkcdAPI.getLastComicsId();
-            lastButton.setClickable(!isLast);
-            lastButton.setTextColor(isLast ? Color.GRAY : Color.BLACK);
-            nextButton.setClickable(!isLast);
-            nextButton.setTextColor(isLast ? Color.GRAY : Color.BLACK);
+        final boolean isLast = id == XkcdAPI.getLastComicsId();
+        lastButton.post(new Runnable() {
+            @Override
+            public void run() {
+                lastButton.setClickable(!isLast);
+                lastButton.setTextColor(isLast ? Color.GRAY : Color.BLACK);
+            }
+        });
+        nextButton.post(new Runnable() {
+            @Override
+            public void run() {
+                nextButton.setClickable(!isLast);
+                nextButton.setTextColor(isLast ? Color.GRAY : Color.BLACK);
+            }
+        });
 
-            boolean isFirst = id == XkcdAPI.getFirstComicsId();
-            firstButton.setClickable(!isFirst);
-            prevButton.setClickable(!isFirst);
-            firstButton.setTextColor(isFirst ? Color.GRAY : Color.BLACK);
-            prevButton.setTextColor(isFirst ? Color.GRAY : Color.BLACK);
-
-            comicsListButton.setText("#" + id);
-        } catch (Exception ignored) {
-        }
+        final boolean isFirst = id == XkcdAPI.getFirstComicsId();
+        firstButton.post(new Runnable() {
+             @Override
+             public void run() {
+                firstButton.setClickable(!isFirst);
+                firstButton.setTextColor(isFirst ? Color.GRAY : Color.BLACK);
+             }
+         });
+        prevButton.post(new Runnable() {
+            @Override
+            public void run() {
+                prevButton.setClickable(!isFirst);
+                prevButton.setTextColor(isFirst ? Color.GRAY : Color.BLACK);
+            }
+        });
+        comicsListButton.post(new Runnable() {
+            @Override
+            public void run() {
+                comicsListButton.setText("#" + id);
+            }
+        });
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();
