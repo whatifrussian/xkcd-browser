@@ -5,15 +5,14 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 public class ComicsLayout extends LinearLayout {
-    public static interface SwipeListener {
+    public interface ComicsTouchListener {
         void onLeftSlide();
         void onRightSlide();
     }
 
-    private SwipeListener l;
+    private ComicsTouchListener l;
     private final GestureDetector gestureDetector;
     private final Context context;
 
@@ -29,7 +28,7 @@ public class ComicsLayout extends LinearLayout {
         this.gestureDetector = new GestureDetector(context, new GestureListener());
     }
 
-    public void setSwipeListener(SwipeListener l) {
+    public void setSwipeListener(ComicsTouchListener l) {
         this.l = l;
     }
 

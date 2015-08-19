@@ -11,7 +11,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,15 +18,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Handler;
 
 public class MainActivity extends AppCompatActivity {
     private static Context context;
@@ -50,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         ComicsLayout comicsLayout = (ComicsLayout)findViewById(R.id.fragmentLayout);
-        comicsLayout.setSwipeListener(new ComicsLayout.SwipeListener() {
+        comicsLayout.setSwipeListener(new ComicsLayout.ComicsTouchListener() {
             @Override
             public void onLeftSlide() {
                 if (!currentFragment.isZoomed()) {
