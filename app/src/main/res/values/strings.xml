@@ -16,4 +16,6 @@
     <string name="title_activity_settings">SettingsActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="useStorage">Save comics</string>
+    <string name="useStorageDescription">Save comics to SD card and info about them. (Will save to sdcard/xkcd)</string>
 </resources>
