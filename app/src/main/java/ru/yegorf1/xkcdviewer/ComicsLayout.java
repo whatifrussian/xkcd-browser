@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.LinearLayout;
 
 public class ComicsLayout extends LinearLayout {
     public interface ComicsTouchListener {
         void onLeftSlide();
         void onRightSlide();
+        void onLongPress();
     }
 
     private ComicsTouchListener l;
@@ -28,9 +30,18 @@ public class ComicsLayout extends LinearLayout {
         this.gestureDetector = new GestureDetector(context, new GestureListener());
     }
 
-    public void setSwipeListener(ComicsTouchListener l) {
+    public void setSwipeListener(final ComicsTouchListener l) {
         this.l = l;
+        this.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                l.onLongPress();
+                return false;
+            }
+        });
     }
+
+
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
@@ -46,6 +57,11 @@ public class ComicsLayout extends LinearLayout {
         @Override
         public boolean onDown(MotionEvent e) {
             return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            l.onLongPress();
         }
 
         @Override

@@ -1,8 +1,10 @@
 package ru.yegorf1.xkcdviewer;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -59,6 +61,19 @@ public class MainActivity extends AppCompatActivity {
                 if (!currentFragment.isZoomed()) {
                     openComics(currentFragment.getPrev());
                 }
+            }
+
+            @Override
+            public void onLongPress() {
+                String text = currentFragment.comicsInfo.text;
+                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
+                dlgAlert.setMessage(text);
+                dlgAlert.setTitle("Description");
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {}}
+                );
+                dlgAlert.setCancelable(false);
+                dlgAlert.create().show();
             }
         });
 
