@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onLongPress() {
+                if (currentFragment == null || currentFragment.comicsInfo == null) { return; }
+                
                 String text = currentFragment.comicsInfo.text;
                 AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
                 dlgAlert.setMessage(text);
