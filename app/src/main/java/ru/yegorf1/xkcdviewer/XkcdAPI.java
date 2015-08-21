@@ -184,6 +184,14 @@ public class XkcdAPI {
         }
     }
 
+    public static int getLastLoadedComicsId() {
+        if (lastLoaded == null) {
+            return getLastComicsId();
+        } else {
+            return lastLoaded.id;
+        }
+    }
+
     public static int getLastComicsId() {
         return urlToId(getLastComicsURL());
     }
