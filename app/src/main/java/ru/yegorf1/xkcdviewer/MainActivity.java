@@ -1,10 +1,8 @@
 package ru.yegorf1.xkcdviewer;
 
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -47,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-        ComicsLayout comicsLayout = (ComicsLayout)findViewById(R.id.fragmentLayout);
-        comicsLayout.setSwipeListener(new ComicsLayout.ComicsTouchListener() {
+        SwipeLayout comicsLayout = (SwipeLayout)findViewById(R.id.fragmentLayout);
+        comicsLayout.setSwipeListener(new SwipeLayout.SwipeListener() {
             @Override
             public void onLeftSlide() {
                 if (!currentFragment.isZoomed()) {

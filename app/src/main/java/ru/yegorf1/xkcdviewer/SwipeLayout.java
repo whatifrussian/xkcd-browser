@@ -4,32 +4,31 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.LinearLayout;
 
-public class ComicsLayout extends LinearLayout {
-    public interface ComicsTouchListener {
+public class SwipeLayout extends LinearLayout {
+    public interface SwipeListener {
         void onLeftSlide();
         void onRightSlide();
     }
 
-    private ComicsTouchListener l;
+    private SwipeListener l;
     private final GestureDetector gestureDetector;
     private final Context context;
 
-    public ComicsLayout(Context context) {
+    public SwipeLayout(Context context) {
         super(context);
         this.context = context;
         this.gestureDetector = new GestureDetector(context, new GestureListener());
     }
 
-    public ComicsLayout(Context context, AttributeSet attrs) {
+    public SwipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         this.gestureDetector = new GestureDetector(context, new GestureListener());
     }
 
-    public void setSwipeListener(final ComicsTouchListener l) {
+    public void setSwipeListener(final SwipeListener l) {
         this.l = l;
     }
 
