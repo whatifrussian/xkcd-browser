@@ -11,7 +11,6 @@ public class ComicsLayout extends LinearLayout {
     public interface ComicsTouchListener {
         void onLeftSlide();
         void onRightSlide();
-        void onLongPress();
     }
 
     private ComicsTouchListener l;
@@ -32,16 +31,7 @@ public class ComicsLayout extends LinearLayout {
 
     public void setSwipeListener(final ComicsTouchListener l) {
         this.l = l;
-        this.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                l.onLongPress();
-                return false;
-            }
-        });
     }
-
-
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
@@ -57,11 +47,6 @@ public class ComicsLayout extends LinearLayout {
         @Override
         public boolean onDown(MotionEvent e) {
             return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            l.onLongPress();
         }
 
         @Override

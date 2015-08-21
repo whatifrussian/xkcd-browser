@@ -62,21 +62,6 @@ public class MainActivity extends AppCompatActivity {
                     openComics(currentFragment.getPrev());
                 }
             }
-
-            @Override
-            public void onLongPress() {
-                if (currentFragment == null || currentFragment.comicsInfo == null) { return; }
-
-                String text = currentFragment.comicsInfo.text;
-                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(MainActivity.this);
-                dlgAlert.setMessage(text);
-                dlgAlert.setTitle("Description");
-                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {}}
-                );
-                dlgAlert.setCancelable(false);
-                dlgAlert.create().show();
-            }
         });
 
         firstButton = (Button) findViewById(R.id.first_comics_button);
