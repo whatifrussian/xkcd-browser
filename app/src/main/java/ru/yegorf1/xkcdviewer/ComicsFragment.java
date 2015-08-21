@@ -1,6 +1,8 @@
 package ru.yegorf1.xkcdviewer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -85,6 +87,22 @@ public class ComicsFragment extends Fragment {
 
             comicsTitleTextView.setText(result.title);
             attacher = new PhotoViewAttacher(comicsImageView);
+            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                @Override
+                public void onViewTap(View view, float x, float y) {
+                    if (comicsInfo == null) { return; }
+
+                    String text = comicsInfo.text;
+                    AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(activity);
+                    dlgAlert.setMessage(text);
+                    dlgAlert.setTitle("Description");
+                    dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {}}
+                    );
+                    dlgAlert.setCancelable(false);
+                    dlgAlert.create().show();
+                }
+            });
 
             new DownloadImageTask(comicsImageView, attacher).execute(result.imageUrl);
         }
