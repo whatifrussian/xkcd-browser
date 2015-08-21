@@ -25,6 +25,8 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 
+import javax.net.ssl.X509KeyManager;
+
 public class MainActivity extends AppCompatActivity {
     private static Context context;
 
@@ -99,18 +101,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (savedInstanceState == null) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    int last = XkcdAPI.getLastComicsId();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int last = XkcdAPI.getLastLoadedComicsId();
 
-                    Log.d("Last", last + " loaded");
-
-                    openComics(last);
-                }
-            }).start();
-        }
+                openComics(last);
+            }
+        }).start();
     }
 
     private void openComicsList() {
@@ -126,12 +124,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
-    public void openComics(final int id) {
-        if (currentFragment != null && currentFragment.comicsInfo.id == id) { return; }
+        setupButtons(XkcdAPI.getLastLoadedComicsId());
+    }
 
-        currentFragment = ComicsFragment.newInstance(id);
-
+    public void setupButtons(final int id) {
         final boolean isLast = id == XkcdAPI.getLastComicsId();
         lastButton.post(new Runnable() {
             @Override
@@ -150,12 +150,12 @@ public class MainActivity extends AppCompatActivity {
 
         final boolean isFirst = id == XkcdAPI.getFirstComicsId();
         firstButton.post(new Runnable() {
-             @Override
-             public void run() {
+            @Override
+            public void run() {
                 firstButton.setClickable(!isFirst);
                 firstButton.setTextColor(isFirst ? Color.GRAY : Color.BLACK);
-             }
-         });
+            }
+        });
         prevButton.post(new Runnable() {
             @Override
             public void run() {
@@ -169,6 +169,13 @@ public class MainActivity extends AppCompatActivity {
                 comicsListButton.setText("#" + id);
             }
         });
+    }
+
+    public void openComics(final int id) {
+        setupButtons(id);
+
+        if (currentFragment != null && currentFragment.comicsInfo.id == id) { return; }
+        currentFragment = ComicsFragment.newInstance(id);
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();
